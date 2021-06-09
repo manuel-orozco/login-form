@@ -77,7 +77,7 @@ export const SignupForm = () => {
     };
 
     return(
-        <form className={classes.root}>
+        <form className={classes.root} onSubmit={onSignup} noValidate autoComplete="off">
             <SignupContainer>
                 <WelcomeContainer>
                         Welcome!

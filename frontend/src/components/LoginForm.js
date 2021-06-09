@@ -29,7 +29,7 @@ export const LoginForm = () => {
     };
 
     return (
-        <form className={classes.root}>
+        <form className={classes.root} onSubmit={onLogin} noValidate autoComplete="off">
             <LoginContainer>
 
                 <WelcomeContainer>
