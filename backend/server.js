@@ -51,15 +51,15 @@ const port = process.env.PORT || 8080
 const app = express()
 
 
-const authenticateUser = async (req, res, next) => {
+const authenticateUser = async (request, response, next) => {
   const user = await User.findOne({ accessToken: request.header('Authorization') });
 
   if (user) {
-    req.user = user;
+    request.user = user;
     next();
   } 
   else {
-    res.status(401).json({ message: 'Sorry, authentication failed' });
+    response.status(401).json({ message: 'Sorry, authentication failed' });
   }
 };
 
@@ -78,18 +78,18 @@ app.use((request, response, next) => {
 });
 
 
-app.get('/', (req, res) => {
-  if (res) {
-    res.status(200).send(listEndpoints(app))
+app.get('/', (request, response) => {
+  if (response) {
+    response.status(200).send(listEndpoints(app))
   } else {
-    res.status(404).send("No endpoints found.")
+    response.status(404).send("No endpoints found.")
   }
 });
 
 
-app.post('/users', async (req, res) => {
+app.post('/users', async (request, response) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password } = request.body;
     
     const user = await new User({
       username,
@@ -97,39 +97,39 @@ app.post('/users', async (req, res) => {
       password,
     }).save();
 
-    res.status(200).json({ userID: user._id });
+    response.status(200).json({ userID: user._id });
   }
   catch (err) {
-    res.status(400).json({ message: 'Sorry, could not create user', errors: err }); 
+    response.status(400).json({ message: 'Sorry, could not create user', errors: err }); 
   }
 });
 
 
-app.post('/sessions', async (req, res) => {
+app.post('/sessions', async (request, response) => {
   try {
-    const { username, password } = req.body;
+    const { username, password } = request.body;
     const user = await User.findOne({ username });
     if (user && bcrypt.compareSync(password, user.password)) {
-      res.status(200).json({ userId: user._id, accessToken: user.accessToken }); 
+      response.status(200).json({ userId: user._id, accessToken: user.accessToken }); 
     } 
     else {
       throw 'Incorrect username or password';
     }
   } catch (err) {
-    res.status(404).json({ error: 'Sorry, user does not exist' });
+    response.status(404).json({ error: 'Sorry, user does not exist' });
   }
 });
 
 
 app.get('/sessions/:id/userMessage', authenticateUser);
 
-app.get('/sessions/:id/userMessage', (req, res) => {
-  const userMessage = `Welcome, ${req.user.username}, you're now logged in!`
-  res.status(201).json(userMessage)
+app.get('/sessions/:id/userMessage', (request, response) => {
+  const userMessage = `Welcome, ${request.user.username}, you're now logged in!`
+  response.status(201).json(userMessage)
 });
 
-app.get('sessions/:id', (req, res) => {
-  res.status(501).send();
+app.get('sessions/:id', (request, response) => {
+  response.status(501).send();
 });
 
 
