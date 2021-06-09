@@ -6,9 +6,13 @@ import crypto from 'crypto'
 import bcrypt from 'bcrypt'
 import validator from 'validator'
 import listEndpoints from 'express-list-endpoints'
+import {MONGO_DB} from './config.js'
 
-const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/authAPI"
+
+const mongoUrl = MONGO_DB;
+
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+
 mongoose.Promise = Promise
 
 const userSchema = new mongoose.Schema({
