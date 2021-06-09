@@ -5,4 +5,4 @@ export const GoBack = () => {
     return (
         <p>Don't have an account? <Link to={`/`}>Sign up here</Link></p>
     )
-}
+};
