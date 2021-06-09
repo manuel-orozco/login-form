@@ -1,10 +1,35 @@
+/* import express from 'express'
+import bodyParser from 'body-parser'
+import cors from 'cors'
+import mongoose from 'mongoose' */
+
 const express = require('express');
-const PORT = 5000;
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const mongoose = require('mongoose');
 
-const server = express();
+const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/authAPI"
+mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.Promise = Promise
 
-server.get('/', function(req, res) {
-    res.send('Hello Worlds!');
-});
+// Defines the port the app will run on. Defaults to 8080, but can be 
+// overridden when starting the server. For example:
+//
+//   PORT=9000 npm start
+const port = process.env.PORT || 8080
+const app = express()
 
-server.listen(PORT);
+// Add middlewares to enable cors and json body parsing
+app.use(cors())
+app.use(bodyParser.json())
+
+// Start defining your routes here
+app.get('/', (req, res) => {
+  res.send('Hello world')
+})
+
+// Start the server
+app.listen(port, () => {
+  // eslint-disable-next-line
+  console.log(`Server running on http://localhost:${port}`)
+})
